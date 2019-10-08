@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Destiny_PC_Loadout_Manager.Auth.Models
+namespace DestinyPCLoadoutManager.Auth.Models
 {
     class TokenResponse
     {

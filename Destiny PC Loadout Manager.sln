@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Destiny PC Loadout Manager", "Destiny PC Loadout Manager\Destiny PC Loadout Manager.csproj", "{EBE1BAEF-9662-484C-B6E5-CD00D034695E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DestinyPCLoadoutManager", "Destiny PC Loadout Manager\DestinyPCLoadoutManager.csproj", "{EBE1BAEF-9662-484C-B6E5-CD00D034695E}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{DA34B18E-90E3-4B21-84C9-D5F36727F8AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{EBE1BAEF-9662-484C-B6E5-CD00D034695E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBE1BAEF-9662-484C-B6E5-CD00D034695E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBE1BAEF-9662-484C-B6E5-CD00D034695E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA34B18E-90E3-4B21-84C9-D5F36727F8AA}.Debug|Any CPU.ActiveCfg = Debug
+		{DA34B18E-90E3-4B21-84C9-D5F36727F8AA}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,12 +3,17 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <RootNamespace>Destiny_PC_Loadout_Manager</RootNamespace>
+    <RootNamespace>DestinyPCLoadoutManager</RootNamespace>
     <UseWPF>true</UseWPF>
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>true</PublishSingleFile>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Destiny2" Version="1.4.0" />
+    <PackageReference Include="Gear.NamedPipesSingleInstance" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Destiny_PC_Loadout_Manager.Auth
+namespace DestinyPCLoadoutManager.Auth
 {
     class AccountManager
     {

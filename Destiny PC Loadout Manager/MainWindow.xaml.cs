@@ -1,4 +1,4 @@
-﻿using Destiny_PC_Loadout_Manager.Auth;
+﻿using DestinyPCLoadoutManager.Auth;
 using Destiny2;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Destiny_PC_Loadout_Manager
+namespace DestinyPCLoadoutManager
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -41,7 +41,7 @@ namespace Destiny_PC_Loadout_Manager
             var account = await accountManager.GetAccount();
             var profile = await destinyApi.GetProfile(oauthManager.currentToken.access_token, (BungieMembershipType) 3, account.MembershipId);
 
-            Console.WriteLine(profile);
+            System.Diagnostics.Debug.WriteLine(profile);
         }
     }
 }

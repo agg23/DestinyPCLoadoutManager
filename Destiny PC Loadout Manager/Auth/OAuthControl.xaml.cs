@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Newtonsoft.Json;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Destiny_PC_Loadout_Manager.Auth
+namespace DestinyPCLoadoutManager.Auth
 {
     /// <summary>
     /// Interaction logic for OAuthControl.xaml
@@ -29,15 +28,10 @@ namespace Destiny_PC_Loadout_Manager.Auth
             InitializeComponent();
         }
 
-        private void AuthenticateClick(object sender, RoutedEventArgs e)
+        private async void AuthenticateClick(object sender, RoutedEventArgs e)
         {
             var url = oauthManager.GenerateAuthorizationUrl();
             oauthManager.VisitUrl(url);
-        }
-
-        private async void EnterCodeClick(object sender, RoutedEventArgs e)
-        {
-            await oauthManager.ExchangeCode(txtBox.Text);
         }
     }
 }

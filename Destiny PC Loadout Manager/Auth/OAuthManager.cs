@@ -1,4 +1,4 @@
-﻿using Destiny_PC_Loadout_Manager.Auth.Models;
+﻿using DestinyPCLoadoutManager.Auth.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,8 +7,9 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
-namespace Destiny_PC_Loadout_Manager.Auth
+namespace DestinyPCLoadoutManager.Auth
 {
     class OAuthManager
     {
@@ -35,17 +36,48 @@ namespace Destiny_PC_Loadout_Manager.Auth
             // Generates state and PKCE values.
             string state = randomDataBase64url(32);
 
-            // Creates a redirect URI using an available port on the loopback address.
-            string redirectURI = string.Format("http://{0}:{1}/", IPAddress.Loopback, port);
-
             // Creates the OAuth 2.0 authorization request.
             string authorizationRequest = string.Format("{0}?response_type=code&redirect_uri={1}&client_id={2}&state={3}",
                 authorizationEndpoint,
-                System.Uri.EscapeDataString(redirectURI),
+                System.Uri.EscapeDataString(RedirectUri()),
                 clientId,
                 state);
 
             return authorizationRequest.Replace("&", "^&");
+        }
+
+        public async void ProcessUriAndExchangeCode(string[] args)
+        {
+            var code = ParseUriResponse(args);
+
+            if (code == null)
+            {
+                return;
+            }
+
+            await ExchangeCode(code);
+        }
+
+        public string ParseUriResponse(string[] args)
+        {
+            if (args.Length < 1)
+            {
+                return null;
+            }
+
+            var firstSegment = args[0];
+
+            var splitCode = firstSegment.Split("?");
+
+            if (splitCode.Length < 2)
+            {
+                // No query params
+                return null;
+            }
+
+            var parsedQuery = HttpUtility.ParseQueryString(splitCode[1]);
+
+            return parsedQuery.Get("code");
         }
 
         public async Task<TokenResponse> ExchangeCode(string code)
@@ -106,6 +138,11 @@ namespace Destiny_PC_Loadout_Manager.Auth
         {
             // Opens request in the browser.
             System.Diagnostics.Process.Start("cmd", String.Format("/C start {0}", url));
+        }
+
+        private string RedirectUri()
+        {
+            return string.Format("http://{0}:{1}/", IPAddress.Loopback, port);
         }
 
         /// <summary>
