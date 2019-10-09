@@ -29,7 +29,6 @@ namespace DestinyPCLoadoutManager
 
         private async void FetchUserClick(object sender, RoutedEventArgs e)
         {
-            var destinyApi = App.provider.GetService(typeof(IDestiny2)) as IDestiny2;
             var oauthManager = App.provider.GetService(typeof(OAuthManager)) as OAuthManager;
             var accountManager = App.provider.GetService(typeof(AccountManager)) as AccountManager;
 
@@ -38,10 +37,17 @@ namespace DestinyPCLoadoutManager
                 return;
             }
 
-            var account = await accountManager.GetAccount();
-            var profile = await destinyApi.GetProfile(oauthManager.currentToken.access_token, (BungieMembershipType) 3, account.MembershipId);
+            var characters = await accountManager.GetCharacters();
 
-            System.Diagnostics.Debug.WriteLine(profile);
+            if (characters.Count() < 1)
+            {
+                // No characters
+                return;
+            }
+
+            //characterList.SetCharacterIds(characters);
+
+            System.Diagnostics.Debug.WriteLine(characters);
         }
     }
 }
