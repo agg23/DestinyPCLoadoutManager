@@ -46,6 +46,12 @@ namespace DestinyPCLoadoutManager.API
             }
 
             var linkedProfiles = await destinyApi.GetLinkedProfiles(oauthManager.currentToken.access_token, oauthManager.currentToken.membership_id);
+
+            if (linkedProfiles == null)
+            {
+                return null;
+            }
+
             var account = linkedProfiles.Profiles.FirstOrDefault();
 
             if (!preventSet)
@@ -72,14 +78,14 @@ namespace DestinyPCLoadoutManager.API
             return profile;
         }
 
-        public async Task<IEnumerable<Character>> GetCharacters()
+        public async Task<Dictionary<long, Character>> GetCharacters()
         {
             var account = await GetAccount();
             var profile = await GetProfile();
 
-            var characters = profile.Profile?.Data?.CharacterIds ?? new List<long>();
+            var characterIds = profile.Profile?.Data?.CharacterIds ?? new List<long>();
 
-            if (characters.Count() < 1)
+            if (characterIds.Count() < 1)
             {
                 // No characters
                 return null;
@@ -93,13 +99,14 @@ namespace DestinyPCLoadoutManager.API
                 DestinyComponentType.CharacterEquipment,
             };
 
-            var characterTasks = characters.Select(async id => {
+            var characterTasks = characterIds.Select(async id => {
                 var response = await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP,
                     account.MembershipId, id, types);
                 return await Character.BuildCharacter(id, response);
             });
 
-            return await Task.WhenAll(characterTasks);
+            var characters = await Task.WhenAll(characterTasks);
+            return characters.ToDictionary(c => c.id, c => c);
         }
 
         public async Task<DestinyCharacterResponse> GetVault()

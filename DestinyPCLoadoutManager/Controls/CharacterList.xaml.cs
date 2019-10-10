@@ -22,25 +22,61 @@ namespace DestinyPCLoadoutManager.Controls
     /// </summary>
     public partial class CharacterList : UserControl
     {
-        private IEnumerable<Character> characters;
+        private Dictionary<long, Character> characters;
+        private Character selectedCharacter;
+
+        private Dictionary<long, CharacterListItem> items;
 
         public CharacterList()
         {
             InitializeComponent();
         }
 
-        public void SetCharacters(IEnumerable<Character> characters)
+        public void SetCharacters(Dictionary<long, Character> characters)
         {
             this.characters = characters;
 
-            icCharacterList.ItemsSource = this.characters.Select(character => new CharacterListItem
+            var selected = Properties.Settings.Default.SelectedGuardian;
+
+            items = this.characters.ToDictionary(kvp => kvp.Key, kvp => new CharacterListItem
             {
-                Title = string.Format("{0}, Light {1}", character.classType.ToString(), character.light),
-                Action = new CommandLambda(() =>
-                {
-                    System.Diagnostics.Debug.WriteLine(character.id);
-                })
+                Title = string.Format("{0}, Light {1}", kvp.Value.classType.ToString(), kvp.Value.light),
+                Id = kvp.Value.id
             });
+
+            icCharacterList.ItemsSource = items.Values;
+
+            if (selected != -1 && this.characters.ContainsKey(selected))
+            {
+                SelectGuardian(selected);
+            }
+        }
+
+        public void SelectGuardianEvent(object sender, SelectionChangedEventArgs e)
+        {
+            if (icCharacterList.SelectedItem != null)
+            {
+                SelectGuardian(((CharacterListItem)icCharacterList.SelectedItem).Id);
+            }
+        }
+
+        private void SelectGuardian(long id)
+        {
+            this.selectedCharacter = characters.GetValueOrDefault(id);
+            var item = items.GetValueOrDefault(id);
+
+            if (item != null)
+            {
+                item.IsSelected = true;
+
+                foreach (var deselectItem in items.Where(i => i.Key != id))
+                {
+                    deselectItem.Value.IsSelected = false;
+                }
+            }
+
+            Properties.Settings.Default.SelectedGuardian = id;
+            Properties.Settings.Default.Save();
         }
     }
 }

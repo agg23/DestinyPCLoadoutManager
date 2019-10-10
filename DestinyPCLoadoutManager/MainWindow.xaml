@@ -11,6 +11,6 @@
     <Grid>
         <auth:OAuthControl VerticalAlignment="Top" />
         <Button Click="FetchUserClick" Margin="356,43,356,0" Height="22" VerticalAlignment="Top">Fetch User</Button>
-        <controls:CharacterList x:Name="characterList" Margin="0,84,0,278" HorizontalAlignment="Center" Width="716" />
+        <controls:CharacterList x:Name="characterList" Margin="0,84,0,195" HorizontalAlignment="Center" Width="716" />
     </Grid>
 </Window>

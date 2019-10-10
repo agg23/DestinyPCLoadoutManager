@@ -53,6 +53,10 @@ namespace DestinyPCLoadoutManager.Auth
                     // Token success
                     return;
                 }
+                else
+                {
+                    currentToken = null;
+                }
             }
         }
 
