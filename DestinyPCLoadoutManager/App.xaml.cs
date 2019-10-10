@@ -75,7 +75,8 @@ namespace DestinyPCLoadoutManager
             config.ApiKey = "c50bb382b1b84e1ba9640125c8f8f299";
 
             services.AddDestiny2(config);
-            services.AddSingleton(new OAuthManager("30077", "55593"));
+            var oauthManager = new OAuthManager("30077", "55593");
+            services.AddSingleton(oauthManager);
             var accountManager = new AccountManager();
             services.AddSingleton(accountManager);
             var manifestManager = new ManifestManager();
@@ -87,6 +88,7 @@ namespace DestinyPCLoadoutManager
             manifestManager.SetupServices();
 
             _ = manifestManager.DownloadManifest();
+            _ = oauthManager.StartAuth();
         }
 
         protected override void OnStartup(StartupEventArgs e)

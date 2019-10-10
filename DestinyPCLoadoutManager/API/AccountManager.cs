@@ -31,7 +31,7 @@ namespace DestinyPCLoadoutManager.API
             oauthManager = App.provider.GetService(typeof(OAuthManager)) as OAuthManager;
         }
 
-        public async Task<DestinyProfileUserInfoCard> GetAccount()
+        public async Task<DestinyProfileUserInfoCard> GetAccount(bool preventSet = false)
         {
             SetupServices();
 
@@ -48,7 +48,10 @@ namespace DestinyPCLoadoutManager.API
             var linkedProfiles = await destinyApi.GetLinkedProfiles(oauthManager.currentToken.access_token, oauthManager.currentToken.membership_id);
             var account = linkedProfiles.Profiles.FirstOrDefault();
 
-            currentAccount = account;
+            if (!preventSet)
+            {
+                currentAccount = account;
+            }
 
             return account;
         }

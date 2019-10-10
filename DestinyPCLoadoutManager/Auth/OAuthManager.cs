@@ -1,4 +1,5 @@
-﻿using DestinyPCLoadoutManager.Auth.Models;
+﻿using DestinyPCLoadoutManager.API;
+using DestinyPCLoadoutManager.Auth.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,28 @@ namespace DestinyPCLoadoutManager.Auth
         {
             this.clientId = clientId;
             this.port = port;
+        }
+
+        public async Task StartAuth()
+        {
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.AccessToken))
+            {
+                // Attempt to use auth code
+                currentToken = new TokenResponse()
+                {
+                    access_token = Properties.Settings.Default.AccessToken,
+                    token_type = Properties.Settings.Default.TokenType,
+                    expires_in = Properties.Settings.Default.ExpiresIn,
+                    membership_id = Properties.Settings.Default.MembershipId
+                };
+
+                var accountManager = App.provider.GetService(typeof(AccountManager)) as AccountManager;
+                if (await accountManager.GetAccount(true) != null)
+                {
+                    // Token success
+                    return;
+                }
+            }
         }
 
         public string GenerateAuthorizationUrl()
@@ -111,6 +134,8 @@ namespace DestinyPCLoadoutManager.Auth
                     var token = JsonConvert.DeserializeObject<TokenResponse>(responseText);
                     currentToken = token;
 
+                    SaveToken();
+
                     return token;
                 }
             }
@@ -145,6 +170,16 @@ namespace DestinyPCLoadoutManager.Auth
         private string RedirectUri()
         {
             return string.Format("http://{0}:{1}/", IPAddress.Loopback, port);
+        }
+
+        private void SaveToken()
+        {
+            Properties.Settings.Default.AccessToken = currentToken.access_token;
+            Properties.Settings.Default.TokenType = currentToken.token_type;
+            Properties.Settings.Default.ExpiresIn = currentToken.expires_in;
+            Properties.Settings.Default.MembershipId = currentToken.membership_id;
+
+            Properties.Settings.Default.Save();
         }
 
         /// <summary>
