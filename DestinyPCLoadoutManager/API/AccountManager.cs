@@ -96,7 +96,7 @@ namespace DestinyPCLoadoutManager.API
             var characterTasks = characters.Select(async id => {
                 var response = await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP,
                     account.MembershipId, id, types);
-                return await Character.BuildCharacter(response);
+                return await Character.BuildCharacter(id, response);
             });
 
             return await Task.WhenAll(characterTasks);

@@ -16,7 +16,7 @@
                             <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Title}" />
-                        <Button Grid.Column="1" Command="{Binding Action}" />
+                        <Button Grid.Column="1" Command="{Binding Action}">Select</Button>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

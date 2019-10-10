@@ -1,5 +1,6 @@
 ﻿using DestinyPCLoadoutManager.API.Models;
 using DestinyPCLoadoutManager.Controls.Models;
+using DestinyPCLoadoutManager.Logic.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace DestinyPCLoadoutManager.Controls
     /// </summary>
     public partial class CharacterList : UserControl
     {
+        private IEnumerable<Character> characters;
+
         public CharacterList()
         {
             InitializeComponent();
@@ -28,9 +31,15 @@ namespace DestinyPCLoadoutManager.Controls
 
         public void SetCharacters(IEnumerable<Character> characters)
         {
-            icCharacterList.ItemsSource = characters.Select(character => new CharacterListItem
+            this.characters = characters;
+
+            icCharacterList.ItemsSource = this.characters.Select(character => new CharacterListItem
             {
-                Title = String.Format("{0}, Light {1}", character.classType.ToString(), character.light)
+                Title = string.Format("{0}, Light {1}", character.classType.ToString(), character.light),
+                Action = new CommandLambda(() =>
+                {
+                    System.Diagnostics.Debug.WriteLine(character.id);
+                })
             });
         }
     }
