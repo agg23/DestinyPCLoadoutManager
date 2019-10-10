@@ -95,7 +95,7 @@
         {
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FD19EF6C057645EFA81056FE8F09AA64"
             {
-            "SourcePath" = "8:..\\Destiny PC Loadout Manager\\bin\\Release\\netcoreapp3.0\\win10-x64\\publish\\DestinyPCLoadoutManager.exe"
+            "SourcePath" = "8:..\\DestinyPCLoadoutManager\\bin\\Release\\netcoreapp3.0\\win10-x64\\publish\\DestinyPCLoadoutManager.exe"
             "TargetName" = "8:DestinyPCLoadoutManager.exe"
             "Tag" = "8:"
             "Folder" = "8:_4B9597ACEB664EF1B93991D9AC790333"

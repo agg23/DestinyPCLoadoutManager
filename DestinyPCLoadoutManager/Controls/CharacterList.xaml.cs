@@ -1,4 +1,5 @@
-﻿using DestinyPCLoadoutManager.Controls.Models;
+﻿using DestinyPCLoadoutManager.API.Models;
+using DestinyPCLoadoutManager.Controls.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +26,11 @@ namespace DestinyPCLoadoutManager.Controls
             InitializeComponent();
         }
 
-        public void SetCharacterIds(IEnumerable<long> ids)
+        public void SetCharacters(IEnumerable<Character> characters)
         {
-            icCharacterList.ItemsSource = ids.Select(id => new CharacterListItem
+            icCharacterList.ItemsSource = characters.Select(character => new CharacterListItem
             {
-                Title = id.ToString()
+                Title = String.Format("{0}, Light {1}", character.classType.ToString(), character.light)
             });
         }
     }

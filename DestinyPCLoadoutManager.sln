@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29403.142
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DestinyPCLoadoutManager", "DestinyPCLoadoutManager\DestinyPCLoadoutManager.csproj", "{4AAB559C-E5B4-4531-B130-32EA18E4E702}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4AAB559C-E5B4-4531-B130-32EA18E4E702}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AAB559C-E5B4-4531-B130-32EA18E4E702}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AAB559C-E5B4-4531-B130-32EA18E4E702}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AAB559C-E5B4-4531-B130-32EA18E4E702}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C24F58ED-8A4A-4148-992F-23B6E6A9CBE1}
+	EndGlobalSection
+EndGlobal

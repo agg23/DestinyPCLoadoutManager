@@ -1,12 +1,14 @@
 ﻿using Destiny2;
 using Destiny2.Responses;
+using DestinyPCLoadoutManager.API.Models;
+using DestinyPCLoadoutManager.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DestinyPCLoadoutManager.Auth
+namespace DestinyPCLoadoutManager.API
 {
     class AccountManager
     {
@@ -18,13 +20,13 @@ namespace DestinyPCLoadoutManager.Auth
         private DestinyProfileUserInfoCard currentAccount;
         private DestinyProfileResponse currentProfile;
 
-        private void SetupServices()
+        public void SetupServices()
         {
             if (destinyApi != null && oauthManager != null)
             {
                 return;
             }
-            
+
             destinyApi = App.provider.GetService(typeof(IDestiny2)) as IDestiny2;
             oauthManager = App.provider.GetService(typeof(OAuthManager)) as OAuthManager;
         }
@@ -57,7 +59,7 @@ namespace DestinyPCLoadoutManager.Auth
             {
                 return currentProfile;
             }
-            
+
             var account = await GetAccount();
 
             var profile = await destinyApi.GetProfile(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP, account.MembershipId);
@@ -67,7 +69,7 @@ namespace DestinyPCLoadoutManager.Auth
             return profile;
         }
 
-        public async Task<IEnumerable<DestinyCharacterResponse>> GetCharacters()
+        public async Task<IEnumerable<Character>> GetCharacters()
         {
             var account = await GetAccount();
             var profile = await GetProfile();
@@ -85,11 +87,37 @@ namespace DestinyPCLoadoutManager.Auth
                 DestinyComponentType.Profiles,
                 DestinyComponentType.Characters,
                 DestinyComponentType.CharacterInventories,
+                DestinyComponentType.CharacterEquipment,
             };
 
-            var characterTasks = characters.Select(id => destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP, account.MembershipId, id, types));
+            var characterTasks = characters.Select(async id => {
+                var response = await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP,
+                    account.MembershipId, id, types);
+                return await Character.BuildCharacter(response);
+            });
 
             return await Task.WhenAll(characterTasks);
+        }
+
+        public async Task<DestinyCharacterResponse> GetVault()
+        {
+            var account = await GetAccount();
+            var profile = await GetProfile();
+
+            var characters = profile.Profile?.Data?.CharacterIds ?? new List<long>();
+
+            if (characters.Count() < 1)
+            {
+                // No characters
+                return null;
+            }
+
+            DestinyComponentType[] types = new DestinyComponentType[]
+            {
+                DestinyComponentType.ProfileInventories,
+            };
+
+            return await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP, account.MembershipId, characters.First(), types);
         }
     }
 }

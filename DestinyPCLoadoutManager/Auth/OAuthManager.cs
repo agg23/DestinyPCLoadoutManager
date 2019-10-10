@@ -19,8 +19,10 @@ namespace DestinyPCLoadoutManager.Auth
         private string port;
 
         public TokenResponse currentToken;
-        public bool IsAuthorized {
-            get {
+        public bool IsAuthorized
+        {
+            get
+            {
                 return currentToken != null;
             }
         }

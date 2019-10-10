@@ -1,5 +1,5 @@
-﻿using DestinyPCLoadoutManager.Auth;
-using Destiny2;
+﻿using DestinyPCLoadoutManager.API;
+using DestinyPCLoadoutManager.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +45,7 @@ namespace DestinyPCLoadoutManager
                 return;
             }
 
-            //characterList.SetCharacterIds(characters);
+            characterList.SetCharacters(characters);
 
             System.Diagnostics.Debug.WriteLine(characters);
         }

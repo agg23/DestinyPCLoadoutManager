@@ -1,4 +1,5 @@
-﻿using DestinyPCLoadoutManager.Auth;
+﻿using DestinyPCLoadoutManager.API;
+using DestinyPCLoadoutManager.Auth;
 using Gear.NamedPipesSingleInstance;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
@@ -50,8 +51,10 @@ namespace DestinyPCLoadoutManager
             manager.ProcessUriAndExchangeCode(args);
         });
 
-        public App() =>
+        public App() : base()
+        {
             singleInstance = new SingleInstance(APP_NAME, SecondaryInstanceMessageReceivedHandler);
+        }
 
         readonly SingleInstance singleInstance;
 
@@ -73,9 +76,17 @@ namespace DestinyPCLoadoutManager
 
             services.AddDestiny2(config);
             services.AddSingleton(new OAuthManager("30077", "55593"));
-            services.AddSingleton(new AccountManager());
+            var accountManager = new AccountManager();
+            services.AddSingleton(accountManager);
+            var manifestManager = new ManifestManager();
+            services.AddSingleton(manifestManager);
 
             provider = services.BuildServiceProvider();
+
+            accountManager.SetupServices();
+            manifestManager.SetupServices();
+
+            _ = manifestManager.DownloadManifest();
         }
 
         protected override void OnStartup(StartupEventArgs e)
