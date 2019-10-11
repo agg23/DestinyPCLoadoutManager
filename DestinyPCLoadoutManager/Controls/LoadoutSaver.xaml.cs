@@ -28,12 +28,12 @@ namespace DestinyPCLoadoutManager.Controls
 
         public void SaveLoadout(object sender, RoutedEventArgs e)
         {
-            _ = inventoryManager.SaveLoadout();
+            _ = inventoryManager.SaveLoadout(0);
         }
 
         public void RestoreLoadout(object sender, RoutedEventArgs e)
         {
-
+            _ = inventoryManager.EquipLoadout(0);
         }
     }
 }

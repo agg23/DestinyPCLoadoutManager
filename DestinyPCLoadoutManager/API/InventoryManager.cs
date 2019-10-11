@@ -26,7 +26,7 @@ namespace DestinyPCLoadoutManager.API
             accountManager = App.provider.GetService(typeof(AccountManager)) as AccountManager;
         }
 
-        public async Task<IEnumerable<Item>> GetEquiped()
+        public async Task<Loadout> GetEquiped()
         {
             var characterTuple = await accountManager.GetCurrentCharacter();
             var character = characterTuple.Item1;
@@ -38,25 +38,22 @@ namespace DestinyPCLoadoutManager.API
                 await character.UpdateInventory(inventoryResponse);
             }
 
-            return character.Inventory.EquippedItems;
+            return new Loadout { EquippedItems = character.Inventory.EquippedItems };
         }
 
         public async Task SaveLoadout(int index = -1)
         {
-            var characterTuple = await accountManager.GetCurrentCharacter();
-            var character = characterTuple.Item1;
-
-            var loadout = new Loadout { EquippedItems = character.Inventory.EquippedItems };
+            var loadout = await GetEquiped();
             var savedLoadouts = Properties.Settings.Default.Loadouts;
 
             var newLoadouts = savedLoadouts != null ? new List<Loadout>(savedLoadouts) : new List<Loadout>();
-            if (index == -1)
+            if (index == -1 || index == newLoadouts.Count)
             {
                 newLoadouts.Add(loadout);
             }
             else
             {
-                if (index >= newLoadouts.Count)
+                if (index > newLoadouts.Count)
                 {
                     return;
                 }
@@ -66,6 +63,30 @@ namespace DestinyPCLoadoutManager.API
 
             Properties.Settings.Default.Loadouts = newLoadouts;
             Properties.Settings.Default.Save();
+        }
+
+        public async Task EquipLoadout(int index)
+        {
+            var savedLoadouts = Properties.Settings.Default.Loadouts;
+
+            if (savedLoadouts.Count <= index)
+            {
+                System.Diagnostics.Debug.WriteLine("Index for loadout does not exist");
+                return;
+            }
+
+            var savedLoadout = savedLoadouts[index];
+
+            if (savedLoadout == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Could not retrieve loadout");
+                return;
+            }
+
+            var equippedItems = await GetEquiped();
+            var missingItems = savedLoadout.Difference(equippedItems);
+
+            System.Diagnostics.Debug.WriteLine(missingItems);
         }
     }
 }
