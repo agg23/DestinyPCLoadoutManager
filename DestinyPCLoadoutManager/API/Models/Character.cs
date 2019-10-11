@@ -14,21 +14,24 @@ namespace DestinyPCLoadoutManager.API.Models
         {
             var manifest = App.provider.GetService(typeof(IManifest)) as IManifest;
             var classTask = manifest.LoadClass(character.Character.Data.ClassHash);
+            var inventoryTask = Inventory.BuildCharacterInventory(character);
 
-            await Task.WhenAll(new Task[] { classTask });
+            await Task.WhenAll(new Task[] { classTask, inventoryTask });
 
-            return new Character(id, classTask.Result, character.Character.Data.Light);
+            return new Character(id, classTask.Result, character.Character.Data.Light, inventoryTask.Result);
         }
 
-        public long id;
-        public DestinyClass classType;
-        public long light;
+        public long Id;
+        public DestinyClass ClassType;
+        public long Light;
+        public Inventory Inventory;
 
-        public Character(long id, DestinyClassDefinition classDef, long light)
+        public Character(long id, DestinyClassDefinition classDef, long light, Inventory Inventory)
         {
-            this.id = id;
-            classType = classDef.ClassType;
-            this.light = light;
+            Id = id;
+            ClassType = classDef.ClassType;
+            Light = light;
+            this.Inventory = Inventory;
         }
     }
 }

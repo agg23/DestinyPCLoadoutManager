@@ -40,8 +40,8 @@ namespace DestinyPCLoadoutManager.Controls
 
             items = this.characters.ToDictionary(kvp => kvp.Key, kvp => new CharacterListItem
             {
-                Title = string.Format("{0}, Light {1}", kvp.Value.classType.ToString(), kvp.Value.light),
-                Id = kvp.Value.id
+                Title = string.Format("{0}, Light {1}", kvp.Value.ClassType.ToString(), kvp.Value.Light),
+                Id = kvp.Value.Id
             });
 
             icCharacterList.ItemsSource = items.Values;

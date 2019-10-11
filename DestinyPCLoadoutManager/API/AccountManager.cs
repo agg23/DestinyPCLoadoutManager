@@ -106,10 +106,10 @@ namespace DestinyPCLoadoutManager.API
             });
 
             var characters = await Task.WhenAll(characterTasks);
-            return characters.ToDictionary(c => c.id, c => c);
+            return characters.ToDictionary(c => c.Id, c => c);
         }
 
-        public async Task<DestinyCharacterResponse> GetVault()
+        public async Task<Inventory> GetVault()
         {
             var account = await GetAccount();
             var profile = await GetProfile();
@@ -127,7 +127,8 @@ namespace DestinyPCLoadoutManager.API
                 DestinyComponentType.ProfileInventories,
             };
 
-            return await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP, account.MembershipId, characters.First(), types);
+            var character = await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP, account.MembershipId, characters.First(), types);
+            return await Inventory.BuildVaultInventory(character);
         }
     }
 }
