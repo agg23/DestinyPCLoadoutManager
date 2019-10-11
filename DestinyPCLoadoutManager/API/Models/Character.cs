@@ -33,5 +33,10 @@ namespace DestinyPCLoadoutManager.API.Models
             Light = light;
             this.Inventory = Inventory;
         }
+
+        public async Task UpdateInventory(DestinyCharacterResponse character)
+        {
+            Inventory = await Inventory.BuildCharacterInventory(character);
+        }
     }
 }

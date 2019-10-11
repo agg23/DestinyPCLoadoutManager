@@ -81,11 +81,14 @@ namespace DestinyPCLoadoutManager
             services.AddSingleton(accountManager);
             var manifestManager = new ManifestManager();
             services.AddSingleton(manifestManager);
+            var inventoryManager = new InventoryManager();
+            services.AddSingleton(inventoryManager);
 
             provider = services.BuildServiceProvider();
 
             accountManager.SetupServices();
             manifestManager.SetupServices();
+            inventoryManager.SetupServices();
 
             _ = manifestManager.DownloadManifest();
             _ = oauthManager.StartAuth();

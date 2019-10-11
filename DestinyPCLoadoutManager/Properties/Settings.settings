@@ -17,5 +17,8 @@
     <Setting Name="ExpiresIn" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="Loadouts" Type="System.Collections.Generic.List&lt;DestinyPCLoadoutManager.API.Models.Loadout&gt;" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

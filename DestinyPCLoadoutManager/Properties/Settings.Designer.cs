@@ -82,5 +82,16 @@ namespace DestinyPCLoadoutManager.Properties {
                 this["ExpiresIn"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Generic.List<DestinyPCLoadoutManager.API.Models.Loadout> Loadouts {
+            get {
+                return ((global::System.Collections.Generic.List<DestinyPCLoadoutManager.API.Models.Loadout>)(this["Loadouts"]));
+            }
+            set {
+                this["Loadouts"] = value;
+            }
+        }
     }
 }

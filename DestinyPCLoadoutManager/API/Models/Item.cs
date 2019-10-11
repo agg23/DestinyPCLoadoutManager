@@ -15,14 +15,16 @@ namespace DestinyPCLoadoutManager.API.Models
 
             var item = await manifest.LoadInventoryItem(itemComponent.ItemHash);
 
-            return new Item(item.DisplayProperties.Name, item.Equippable);
+            return new Item(itemComponent.ItemHash, item.DisplayProperties.Name, item.Equippable);
         }
 
+        public long Id;
         public string Name;
         public bool Equippable;
 
-        public Item(string name, bool equippable)
+        public Item(long id, string name, bool equippable)
         {
+            Id = id;
             Name = name;
             Equippable = equippable;
         }
