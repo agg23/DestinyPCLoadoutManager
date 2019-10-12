@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DestinyPCLoadoutManager.API.Models
 {
+    [Serializable]
     class Loadout
     {
         public IEnumerable<Item> EquippedItems { get; set; }

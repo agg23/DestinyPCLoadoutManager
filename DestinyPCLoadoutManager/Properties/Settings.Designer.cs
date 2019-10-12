@@ -84,6 +84,7 @@ namespace DestinyPCLoadoutManager.Properties {
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsSerializeAs(System.Configuration.SettingsSerializeAs.Binary)]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public global::System.Collections.Generic.List<DestinyPCLoadoutManager.API.Models.Loadout> Loadouts {
             get {

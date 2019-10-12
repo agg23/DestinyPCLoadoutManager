@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DestinyPCLoadoutManager.API.Models
 {
+    [Serializable]
     public class Item
     {
         public static async Task<Item> BuildItem(DestinyItemComponent itemComponent)
