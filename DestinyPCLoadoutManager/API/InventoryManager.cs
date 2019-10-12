@@ -3,6 +3,7 @@ using DestinyPCLoadoutManager.API.Models;
 using DestinyPCLoadoutManager.Auth;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,7 +70,7 @@ namespace DestinyPCLoadoutManager.API
         {
             var savedLoadouts = Properties.Settings.Default.Loadouts;
 
-            if (savedLoadouts.Count <= index)
+            if (savedLoadouts == null || savedLoadouts.Count <= index)
             {
                 System.Diagnostics.Debug.WriteLine("Index for loadout does not exist");
                 return;
@@ -85,6 +86,15 @@ namespace DestinyPCLoadoutManager.API
 
             var equippedItems = await GetEquiped();
             var missingItems = savedLoadout.Difference(equippedItems);
+
+            if (!missingItems.EquippedItems.Any())
+            {
+                return;
+            }
+
+            var characterTuple = await accountManager.GetCurrentCharacter();
+
+            await destinyApi.EquipItem(oauthManager.currentToken.access_token, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, missingItems.EquippedItems.First().Id);
 
             System.Diagnostics.Debug.WriteLine(missingItems);
         }

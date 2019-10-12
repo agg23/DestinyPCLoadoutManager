@@ -12,8 +12,6 @@ namespace DestinyPCLoadoutManager.API
 {
     class AccountManager
     {
-        private static BungieMembershipType STEAM_MEMBERSHIP = (BungieMembershipType)3;
-
         private IDestiny2 destinyApi;
         private OAuthManager oauthManager;
 
@@ -74,7 +72,7 @@ namespace DestinyPCLoadoutManager.API
 
             var account = await GetAccount();
 
-            var profile = await destinyApi.GetProfile(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP, account.MembershipId);
+            var profile = await destinyApi.GetProfile(oauthManager.currentToken.access_token, BungieMembershipType.TigerSteam, account.MembershipId);
 
             currentProfile = profile;
 
@@ -93,7 +91,7 @@ namespace DestinyPCLoadoutManager.API
                 DestinyComponentType.CharacterEquipment,
             };
 
-            return await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP,
+            return await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, BungieMembershipType.TigerSteam,
                 account.MembershipId, id, types);
         }
 
@@ -163,7 +161,7 @@ namespace DestinyPCLoadoutManager.API
                 DestinyComponentType.ProfileInventories,
             };
 
-            var character = await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, STEAM_MEMBERSHIP, account.MembershipId, characters.First(), types);
+            var character = await destinyApi.GetCharacterInfo(oauthManager.currentToken.access_token, BungieMembershipType.TigerSteam, account.MembershipId, characters.First(), types);
             vault = await Inventory.BuildVaultInventory(character);
             return vault;
         }
