@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -73,6 +75,10 @@ namespace DestinyPCLoadoutManager
 
             var config = new Destiny2.Destiny2Config(APP_NAME, "1.0", "30077", "", "");
             config.ApiKey = "c50bb382b1b84e1ba9640125c8f8f299";
+            config.CustomClientHandlerFunc = () => new HttpClientHandler
+            {
+                CookieContainer = new CookieContainer()
+            };
 
             services.AddDestiny2(config);
             var oauthManager = new OAuthManager("30077", "55593");
