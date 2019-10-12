@@ -93,8 +93,11 @@ namespace DestinyPCLoadoutManager.API
             }
 
             var characterTuple = await accountManager.GetCurrentCharacter();
+            // Sort items to apply exotics last; ensuring any other exotic is removed before
+            // attempting to insert a new exotic
+            var sortedItems = missingItems.EquippedItems.OrderBy(item => item.Tier);
 
-            await destinyApi.EquipItem(oauthManager.currentToken.access_token, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, missingItems.EquippedItems.First().Id);
+            await destinyApi.EquipItems(oauthManager.currentToken.access_token, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, sortedItems.Select(item => item.Id).ToArray());
 
             System.Diagnostics.Debug.WriteLine(missingItems);
         }
