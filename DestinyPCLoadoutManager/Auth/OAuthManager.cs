@@ -128,7 +128,7 @@ namespace DestinyPCLoadoutManager.Auth
             }
 
             // builds the request
-            string tokenRequestBody = string.Format("grant_type=refresh_token&refresh_token={0}", refreshToken);
+            string tokenRequestBody = string.Format("grant_type=refresh_token&refresh_token={0}&client_id={1}&client_secret={2}", refreshToken, clientId, clientSecret);
 
             return await RequestToken(tokenRequestBody);
         }
