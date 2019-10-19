@@ -25,18 +25,6 @@ namespace DestinyPCLoadoutManager.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string AccessToken {
-            get {
-                return ((string)(this["AccessToken"]));
-            }
-            set {
-                this["AccessToken"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
         public long SelectedGuardian {
             get {
@@ -46,43 +34,22 @@ namespace DestinyPCLoadoutManager.Properties {
                 this["SelectedGuardian"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsSerializeAs(System.Configuration.SettingsSerializeAs.Binary)]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string TokenType {
-            get {
-                return ((string)(this["TokenType"]));
+        public global::DestinyPCLoadoutManager.Auth.Models.TokenResponse AuthToken
+        {
+            get
+            {
+                return ((global::DestinyPCLoadoutManager.Auth.Models.TokenResponse)(this["AuthToken"]));
             }
-            set {
-                this["TokenType"] = value;
+            set
+            {
+                this["AuthToken"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public long MembershipId {
-            get {
-                return ((long)(this["MembershipId"]));
-            }
-            set {
-                this["MembershipId"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ExpiresIn {
-            get {
-                return ((int)(this["ExpiresIn"]));
-            }
-            set {
-                this["ExpiresIn"] = value;
-            }
-        }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsSerializeAs(System.Configuration.SettingsSerializeAs.Binary)]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

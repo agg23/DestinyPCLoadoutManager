@@ -98,7 +98,7 @@ namespace DestinyPCLoadoutManager.API
             // attempting to insert a new exotic
             var sortedItems = savedLoadout.EquippedItems.OrderBy(item => item.Tier);
 
-            await destinyApi.EquipItems(oauthManager.currentToken.access_token, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, sortedItems.Select(item => item.Id).ToArray());
+            await destinyApi.EquipItems(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, sortedItems.Select(item => item.Id).ToArray());
         }
     }
 }

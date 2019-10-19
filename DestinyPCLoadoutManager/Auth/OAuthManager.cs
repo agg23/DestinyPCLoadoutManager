@@ -17,6 +17,7 @@ namespace DestinyPCLoadoutManager.Auth
         private static string authorizationEndpoint = "https://www.bungie.net/en/OAuth/Authorize";
         private static string tokenEndpoint = "https://www.bungie.net/Platform/App/OAuth/token/";
         private string clientId;
+        private string clientSecret;
         private string port;
 
         public TokenResponse currentToken;
@@ -28,24 +29,21 @@ namespace DestinyPCLoadoutManager.Auth
             }
         }
 
-        public OAuthManager(string clientId, string port)
+        public OAuthManager(string clientId, string clientSecret, string port)
         {
             this.clientId = clientId;
+            this.clientSecret = clientSecret;
             this.port = port;
         }
 
         public async Task StartAuth()
         {
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.AccessToken))
+            var savedToken = Properties.Settings.Default.AuthToken;
+
+            if (savedToken != null)
             {
                 // Attempt to use auth code
-                currentToken = new TokenResponse()
-                {
-                    access_token = Properties.Settings.Default.AccessToken,
-                    token_type = Properties.Settings.Default.TokenType,
-                    expires_in = Properties.Settings.Default.ExpiresIn,
-                    membership_id = Properties.Settings.Default.MembershipId
-                };
+                currentToken = savedToken;
 
                 var accountManager = App.provider.GetService(typeof(AccountManager)) as AccountManager;
                 if (await accountManager.GetAccount(true) != null)
@@ -112,7 +110,7 @@ namespace DestinyPCLoadoutManager.Auth
         public async Task<TokenResponse> ExchangeCode(string code)
         {
             // builds the request
-            string tokenRequestBody = string.Format("grant_type=authorization_code&code={0}&client_id={1}", code, clientId);
+            string tokenRequestBody = string.Format("grant_type=authorization_code&code={0}&client_id={1}&client_secret={2}", code, clientId, clientSecret);
 
             // sends the request
             HttpWebRequest tokenRequest = (HttpWebRequest)WebRequest.Create(tokenEndpoint);
@@ -178,10 +176,7 @@ namespace DestinyPCLoadoutManager.Auth
 
         private void SaveToken()
         {
-            Properties.Settings.Default.AccessToken = currentToken.access_token;
-            Properties.Settings.Default.TokenType = currentToken.token_type;
-            Properties.Settings.Default.ExpiresIn = currentToken.expires_in;
-            Properties.Settings.Default.MembershipId = currentToken.membership_id;
+            Properties.Settings.Default.AuthToken = currentToken;
 
             Properties.Settings.Default.Save();
         }

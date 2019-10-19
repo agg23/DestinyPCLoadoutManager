@@ -1,14 +1,29 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DestinyPCLoadoutManager.Auth.Models
 {
+    [Serializable]
     class TokenResponse
     {
-        public string access_token { get; set; }
-        public string token_type { get; set; }
-        public int expires_in { get; set; }
-        public long membership_id { get; set; }
+        [JsonProperty("access_token")]
+        public string AccessToken { get; set; }
+
+        [JsonProperty("token_type")]
+        public string TokenType { get; set; }
+
+        [JsonProperty("expires_in")]
+        public long ExpiresIn { get; set; }
+
+        [JsonProperty("refresh_token")]
+        public string RefreshToken { get; set; }
+
+        [JsonProperty("refresh_expires_in")]
+        public long RefreshExpiresIn { get; set; }
+
+        [JsonProperty("membership_id")]
+        public long MembershipId { get; set; }
     }
 }

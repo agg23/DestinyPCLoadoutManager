@@ -81,7 +81,7 @@ namespace DestinyPCLoadoutManager
             };
 
             services.AddDestiny2(config);
-            var oauthManager = new OAuthManager("30077", "55593");
+            var oauthManager = new OAuthManager("30077", "oopA-AwO0TL.uN5WEgyTzB0Tv76ewm4PKLEzN1IqmvY", "55593");
             services.AddSingleton(oauthManager);
             var accountManager = new AccountManager();
             services.AddSingleton(accountManager);
