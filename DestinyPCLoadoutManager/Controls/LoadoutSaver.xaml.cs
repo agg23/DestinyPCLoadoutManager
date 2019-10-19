@@ -24,6 +24,8 @@ namespace DestinyPCLoadoutManager.Controls
         public LoadoutSaver()
         {
             InitializeComponent();
+
+            shortcut.SetShortcut(RemoveShortcut, SaveShortcut);
         }
 
         public void SaveLoadout(object sender, RoutedEventArgs e)
@@ -32,6 +34,23 @@ namespace DestinyPCLoadoutManager.Controls
         }
 
         public void RestoreLoadout(object sender, RoutedEventArgs e)
+        {
+            _ = inventoryManager.EquipLoadout(0);
+        }
+
+        private void SaveShortcut(Key key, ModifierKeys modifiers)
+        {  
+            Logic.InputManager inputManager = App.provider.GetService(typeof(Logic.InputManager)) as Logic.InputManager;
+            inputManager.RegisterShortcut("0", key, modifiers, ShortcutAction);
+        }
+
+        private void RemoveShortcut(Key key, ModifierKeys modifiers)
+        {
+            Logic.InputManager inputManager = App.provider.GetService(typeof(Logic.InputManager)) as Logic.InputManager;
+            inputManager.UnregisterShortcut("0", key, modifiers);
+        }
+
+        private void ShortcutAction()
         {
             _ = inventoryManager.EquipLoadout(0);
         }

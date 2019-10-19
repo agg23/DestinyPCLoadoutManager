@@ -5,11 +5,11 @@ using System.Windows.Input;
 
 namespace DestinyPCLoadoutManager.Logic.Models
 {
-    class CommandLambda: ICommand
+    class CommandLambda<T>: ICommand
     {
-        Action func;
+        Action<T> func;
         
-        public CommandLambda(Action func)
+        public CommandLambda(Action<T> func)
         {
             this.func = func;
         }
@@ -23,7 +23,7 @@ namespace DestinyPCLoadoutManager.Logic.Models
 
         public void Execute(object parameter)
         {
-            func();
+            func((T)parameter);
         }
     }
 }

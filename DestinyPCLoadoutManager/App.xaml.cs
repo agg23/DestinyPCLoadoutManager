@@ -1,5 +1,6 @@
 ﻿using DestinyPCLoadoutManager.API;
 using DestinyPCLoadoutManager.Auth;
+using DestinyPCLoadoutManager.Logic;
 using Gear.NamedPipesSingleInstance;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
@@ -89,6 +90,7 @@ namespace DestinyPCLoadoutManager
             services.AddSingleton(manifestManager);
             var inventoryManager = new InventoryManager();
             services.AddSingleton(inventoryManager);
+            services.AddSingleton(new InputManager());
 
             provider = services.BuildServiceProvider();
 
