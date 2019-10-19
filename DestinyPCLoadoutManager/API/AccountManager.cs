@@ -46,7 +46,7 @@ namespace DestinyPCLoadoutManager.API
                 return currentAccount;
             }
 
-            var linkedProfiles = await destinyApi.GetLinkedProfiles(oauthManager.currentToken.AccessToken, oauthManager.currentToken.MembershipId);
+            var linkedProfiles = await Util.RequestAndRetry(() => destinyApi.GetLinkedProfiles(oauthManager.currentToken.AccessToken, oauthManager.currentToken.MembershipId));
 
             if (linkedProfiles == null)
             {
@@ -72,7 +72,7 @@ namespace DestinyPCLoadoutManager.API
 
             var account = await GetAccount();
 
-            var profile = await destinyApi.GetProfile(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, account.MembershipId);
+            var profile = await Util.RequestAndRetry(() => destinyApi.GetProfile(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, account.MembershipId));
 
             currentProfile = profile;
 
@@ -91,8 +91,8 @@ namespace DestinyPCLoadoutManager.API
                 DestinyComponentType.CharacterEquipment,
             };
 
-            return await destinyApi.GetCharacterInfo(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam,
-                account.MembershipId, id, types);
+            return await Util.RequestAndRetry(() => destinyApi.GetCharacterInfo(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam,
+                account.MembershipId, id, types));
         }
 
         public async Task<Character> GetCharacter(long id)
@@ -161,7 +161,7 @@ namespace DestinyPCLoadoutManager.API
                 DestinyComponentType.ProfileInventories,
             };
 
-            var character = await destinyApi.GetCharacterInfo(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, account.MembershipId, characters.First(), types);
+            var character = await Util.RequestAndRetry(() => destinyApi.GetCharacterInfo(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, account.MembershipId, characters.First(), types));
             vault = await Inventory.BuildVaultInventory(character);
             return vault;
         }

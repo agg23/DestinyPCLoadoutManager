@@ -51,10 +51,13 @@ namespace DestinyPCLoadoutManager.Auth
                     // Token success
                     return;
                 }
-                else
+                else if (await RefreshToken() != null && await accountManager.GetAccount(true) != null)
                 {
-                    currentToken = null;
+                    // Refresh succeeded and token success
+                    return;
                 }
+
+                currentToken = null;
             }
         }
 
@@ -112,6 +115,26 @@ namespace DestinyPCLoadoutManager.Auth
             // builds the request
             string tokenRequestBody = string.Format("grant_type=authorization_code&code={0}&client_id={1}&client_secret={2}", code, clientId, clientSecret);
 
+            return await RequestToken(tokenRequestBody);
+        }
+
+        public async Task<TokenResponse> RefreshToken()
+        {
+            var refreshToken = currentToken?.RefreshToken;
+
+            if (refreshToken == null)
+            {
+                return null;
+            }
+
+            // builds the request
+            string tokenRequestBody = string.Format("grant_type=refresh_token&refresh_token={0}", refreshToken);
+
+            return await RequestToken(tokenRequestBody);
+        }
+
+        private async Task<TokenResponse> RequestToken(string tokenRequestBody)
+        {
             // sends the request
             HttpWebRequest tokenRequest = (HttpWebRequest)WebRequest.Create(tokenEndpoint);
             tokenRequest.Method = "POST";
