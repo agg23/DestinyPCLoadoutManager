@@ -27,7 +27,7 @@ namespace DestinyPCLoadoutManager
             InitializeComponent();
         }
 
-        private async void FetchUserClick(object sender, RoutedEventArgs e)
+        public async void FetchUserClick(object sender, RoutedEventArgs e)
         {
             var oauthManager = App.provider.GetService(typeof(OAuthManager)) as OAuthManager;
             var accountManager = App.provider.GetService(typeof(AccountManager)) as AccountManager;
@@ -46,8 +46,6 @@ namespace DestinyPCLoadoutManager
             }
 
             characterList.SetCharacters(characters);
-
-            System.Diagnostics.Debug.WriteLine(characters);
         }
     }
 }

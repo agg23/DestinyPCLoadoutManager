@@ -97,7 +97,13 @@ namespace DestinyPCLoadoutManager
             inventoryManager.SetupServices();
 
             _ = manifestManager.DownloadManifest();
-            _ = oauthManager.StartAuth();
+            await oauthManager.StartAuth();
+
+            await OnUiThreadAsync(() =>
+            {
+                var mainWindow = (MainWindow)Current.MainWindow;
+                mainWindow.FetchUserClick(null, null);
+            });
         }
 
         protected override void OnStartup(StartupEventArgs e)
