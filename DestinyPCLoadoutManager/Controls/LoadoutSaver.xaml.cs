@@ -24,6 +24,12 @@ namespace DestinyPCLoadoutManager.Controls
 
                 nameTextBox.Text = value?.Name;
                 restoreButton.IsEnabled = value != null;
+
+                if (value.Shortcut != null)
+                {
+                    shortcut.SetShortcut(value.Shortcut, RemoveShortcut, SaveShortcut);
+                    RegisterShortcut(value.Shortcut);
+                }
             }
         }
         private int index;
@@ -43,21 +49,17 @@ namespace DestinyPCLoadoutManager.Controls
         {
             this.loadout = loadout;
             this.index = index;
-
-            if (loadout.Shortcut != null)
-            {
-                shortcut.SetShortcut(loadout.Shortcut, RemoveShortcut, SaveShortcut);
-                RegisterShortcut(loadout.Shortcut);
-            }
         }
 
         public async void SaveLoadout(object sender, RoutedEventArgs e)
         {
             var temp = loadout;
-            loadout = await inventoryManager.GetEquiped();
+            var newLoadout = await inventoryManager.GetEquiped();
 
-            loadout.Name = temp.Name;
-            loadout.Shortcut = temp.Shortcut;
+            newLoadout.Name = temp.Name;
+            newLoadout.Shortcut = temp.Shortcut;
+
+            loadout = newLoadout;
 
             SaveLoadoutChanges();
         }
