@@ -19,7 +19,7 @@ namespace DestinyPCLoadoutManager.Controls
         private Key key;
         private ModifierKeys modifiers;
         private Action<Shortcut> editAction;
-        private Action<Shortcut> saveAction;
+        private Func<Shortcut, bool> saveAction;
         
         public ShortcutInputBox()
         {
@@ -32,13 +32,13 @@ namespace DestinyPCLoadoutManager.Controls
             isEditMode = false;
         }
 
-        public void SetShortcut(Action<Shortcut> editAction, Action<Shortcut> saveAction)
+        public void SetShortcut(Action<Shortcut> editAction, Func<Shortcut, bool> saveAction)
         {
             this.editAction = editAction;
             this.saveAction = saveAction;
         }
 
-        public void SetShortcut(Shortcut shortcut, Action<Shortcut> editAction, Action<Shortcut> saveAction)
+        public void SetShortcut(Shortcut shortcut, Action<Shortcut> editAction, Func<Shortcut, bool> saveAction)
         {
             this.key = shortcut.Key;
             this.modifiers = shortcut.Modifiers;
@@ -52,9 +52,12 @@ namespace DestinyPCLoadoutManager.Controls
             if (isEditMode)
             {
                 // Save
-                if (key != Key.None)
+                if (key != Key.None && !saveAction(new Shortcut(key, modifiers)))
                 {
-                    saveAction(new Shortcut(key, modifiers));
+                    // Save failed
+                    textBox.Text = "Shortcut in use";
+                    textBox.Focus();
+                    return;
                 }
             }
             else

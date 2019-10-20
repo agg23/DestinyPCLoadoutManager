@@ -22,7 +22,14 @@ namespace DestinyPCLoadoutManager.Logic
 
             registeredKeys.Add(hash);
             
-            HotkeyManager.Current.AddOrReplace(name, shortcut.Key, shortcut.Modifiers, new EventHandler<NHotkey.HotkeyEventArgs>((sender, e) => action()));
+            try
+            {
+                HotkeyManager.Current.AddOrReplace(name, shortcut.Key, shortcut.Modifiers, new EventHandler<NHotkey.HotkeyEventArgs>((sender, e) => action()));
+            }
+            catch
+            {
+                return false;
+            }
 
             return true;
         }

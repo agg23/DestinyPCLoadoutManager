@@ -1,17 +1,7 @@
 ﻿using DestinyPCLoadoutManager.API;
 using DestinyPCLoadoutManager.API.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DestinyPCLoadoutManager.Controls
 {
@@ -116,19 +106,23 @@ namespace DestinyPCLoadoutManager.Controls
             SaveFarmMode();
         }
 
-        private void SaveShortcut(Shortcut shortcut)
+        private bool SaveShortcut(Shortcut shortcut)
         {
             loadout.Shortcut = shortcut;
 
-            RegisterShortcut(shortcut);
+            if (RegisterShortcut(shortcut))
+            {
+                SaveLoadoutChanges();
+                return true;
+            }
 
-            SaveLoadoutChanges();
+            return false;
         }
 
-        private void RegisterShortcut(Shortcut shortcut)
+        private bool RegisterShortcut(Shortcut shortcut)
         {
             Logic.InputManager inputManager = App.provider.GetService(typeof(Logic.InputManager)) as Logic.InputManager;
-            inputManager.RegisterShortcut("FarmingMode", shortcut, PerformRestore);
+            return inputManager.RegisterShortcut("FarmingMode", shortcut, PerformRestore);
         }
 
         private void RemoveShortcut(Shortcut shortcut)

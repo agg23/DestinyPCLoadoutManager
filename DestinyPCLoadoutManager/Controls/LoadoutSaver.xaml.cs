@@ -97,19 +97,23 @@ namespace DestinyPCLoadoutManager.Controls
             });
         }
 
-        private void SaveShortcut(Shortcut shortcut)
+        private bool SaveShortcut(Shortcut shortcut)
         {
             loadout.Shortcut = shortcut;
 
-            RegisterShortcut(shortcut);
+            if (RegisterShortcut(shortcut))
+            {
+                SaveLoadoutChanges();
+                return true;
+            }
 
-            SaveLoadoutChanges();
+            return false;
         }
 
-        private void RegisterShortcut(Shortcut shortcut)
+        private bool RegisterShortcut(Shortcut shortcut)
         {
             Logic.InputManager inputManager = App.provider.GetService(typeof(Logic.InputManager)) as Logic.InputManager;
-            inputManager.RegisterShortcut($"{index}", shortcut, PerformRestore);
+            return inputManager.RegisterShortcut($"{index}", shortcut, PerformRestore);
         }
 
         private void RemoveShortcut(Shortcut shortcut)
