@@ -30,20 +30,26 @@ namespace DestinyPCLoadoutManager
             var oauthManager = App.provider.GetService(typeof(OAuthManager)) as OAuthManager;
             oauthManager.AuthEvent += AuthChanged;
 
+            // Main loadouts
             var loadouts = Properties.Settings.Default.Loadouts;
 
-            if (loadouts == null)
+            if (loadouts != null)
             {
-                return;
+                var saverList = new List<LoadoutSaver> { loadout0, loadout1, loadout2, loadout3, loadout4 };
+
+                var index = 0;
+                foreach (var pair in loadouts.Zip(saverList))
+                {
+                    pair.Second.SetLoadout(pair.First, index);
+                    index += 1;
+                }
             }
 
-            var saverList = new List<LoadoutSaver> { loadout0, loadout1, loadout2, loadout3, loadout4 };
+            var farmingLoadout = Properties.Settings.Default.FarmingLoadout;
 
-            var index = 0;
-            foreach (var pair in loadouts.Zip(saverList))
+            if (farmingLoadout != null)
             {
-                pair.Second.SetLoadout(pair.First, index);
-                index += 1;
+                loadoutFarming.SetLoadout(farmingLoadout, Properties.Settings.Default.IsFarmingMode);
             }
         }
 

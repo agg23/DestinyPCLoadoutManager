@@ -44,7 +44,7 @@ namespace DestinyPCLoadoutManager.API.Models
 
         private static async Task<IEnumerable<Item>> ParseItems(IEnumerable<DestinyItemComponent> unparsedItems, IManifest manifest)
         {
-            return await Task.WhenAll((await Task.WhenAll(unparsedItems.Select(async item =>
+            var items = await Task.WhenAll((await Task.WhenAll(unparsedItems.Select(async item =>
             {
                 var bucket = await manifest.LoadBucket(item.BucketHash);
                 if (bucket.Category != BucketCategory.Equippable)
@@ -54,6 +54,8 @@ namespace DestinyPCLoadoutManager.API.Models
 
                 return item;
             }))).Where(i => i != null).Select(item => Item.BuildItem(item)));
+
+            return items.Where(i => i.Type == DestinyItemType.Armor || i.Type == DestinyItemType.Weapon);
         }
 
         public IEnumerable<Item> EquippedItems;

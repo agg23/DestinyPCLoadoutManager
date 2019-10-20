@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DestinyPCLoadoutManager.API.Models
 {
@@ -11,18 +10,21 @@ namespace DestinyPCLoadoutManager.API.Models
     {
         public string Name { get; set; }
         public Shortcut Shortcut { get; set; }
-        public IEnumerable<Item> EquippedItems { get; set; }
+        public List<Item> EquippedItems { get; set; }
+        public List<Item> InventoryItems { get; set; }
 
         public Loadout()
         {
             EquippedItems = new List<Item>();
+            InventoryItems = new List<Item>();
         }
 
         public Loadout Difference(Loadout additional)
         {
             return new Loadout
             {
-                EquippedItems = this.EquippedItems.Difference(additional.EquippedItems, item => item.Id)
+                EquippedItems = this.EquippedItems.Difference(additional.EquippedItems, item => item.Id).ToList(),
+                InventoryItems = this.InventoryItems.Difference(additional.InventoryItems, item => item.Id).ToList()
             };
         }
     }

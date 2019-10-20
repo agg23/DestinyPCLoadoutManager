@@ -61,5 +61,35 @@ namespace DestinyPCLoadoutManager.Properties {
                 this["Loadouts"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsSerializeAs(System.Configuration.SettingsSerializeAs.Binary)]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public DestinyPCLoadoutManager.API.Models.Loadout FarmingLoadout
+        {
+            get
+            {
+                return ((DestinyPCLoadoutManager.API.Models.Loadout)(this["FarmingLoadout"]));
+            }
+            set
+            {
+                this["FarmingLoadout"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("false")]
+        public bool IsFarmingMode
+        {
+            get
+            {
+                return ((bool)(this["IsFarmingMode"]));
+            }
+            set
+            {
+                this["IsFarmingMode"] = value;
+            }
+        }
     }
 }

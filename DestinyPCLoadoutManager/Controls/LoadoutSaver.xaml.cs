@@ -1,6 +1,7 @@
 ﻿using DestinyPCLoadoutManager.API;
 using DestinyPCLoadoutManager.API.Models;
 using DestinyPCLoadoutManager.Logic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,7 +15,7 @@ namespace DestinyPCLoadoutManager.Controls
     {
         InventoryManager inventoryManager = App.provider.GetService(typeof(InventoryManager)) as InventoryManager;
 
-        private Loadout _loadout = new Loadout();
+        private Loadout _loadout;
         private Loadout loadout {
             get {
                 return _loadout;
@@ -23,7 +24,7 @@ namespace DestinyPCLoadoutManager.Controls
                 _loadout = value;
 
                 nameTextBox.Text = value?.Name;
-                restoreButton.IsEnabled = value != null;
+                restoreButton.IsEnabled = value != null && ((value.EquippedItems?.Any() ?? false) || (value.InventoryItems?.Any() ?? false));
 
                 if (value.Shortcut != null)
                 {
@@ -39,6 +40,8 @@ namespace DestinyPCLoadoutManager.Controls
         public LoadoutSaver()
         {
             InitializeComponent();
+
+            loadout = new Loadout();
 
             nameTextBox.TextChanged += NameTextBoxChanged;
 

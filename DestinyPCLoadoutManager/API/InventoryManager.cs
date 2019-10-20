@@ -40,10 +40,10 @@ namespace DestinyPCLoadoutManager.API
                 await character.UpdateInventory(inventoryResponse);
             }
 
-            return new Loadout { EquippedItems = character.Inventory.EquippedItems };
+            return new Loadout { EquippedItems = character.Inventory.EquippedItems.ToList() };
         }
 
-        public Loadout SaveLoadout(Loadout loadout, int index)
+        public void SaveLoadout(Loadout loadout, int index)
         {
             var savedLoadouts = Properties.Settings.Default.Loadouts;
             var newLoadouts = savedLoadouts != null ? new List<Loadout>(savedLoadouts) : new List<Loadout>();
@@ -55,7 +55,7 @@ namespace DestinyPCLoadoutManager.API
             {
                 if (index > newLoadouts.Count)
                 {
-                    return loadout;
+                    return;
                 }
 
                 newLoadouts[index] = loadout;
@@ -64,16 +64,16 @@ namespace DestinyPCLoadoutManager.API
             Properties.Settings.Default.Loadouts = newLoadouts;
             Properties.Settings.Default.Save();
 
-            return loadout;
+            return;
         }
 
-        public async Task EquipLoadout(Loadout loadout)
+        public async Task EquipLoadout(Loadout loadout, bool includeInventory = false)
         {
             // TODO: Loadout diffing appears to be insufficient, as Bungie will often
             // return a cached state of your loadout. Some cache busting method is required
             var equippedItems = await GetEquiped();
             //var missingItems = savedLoadout.Difference(equippedItems);
-            /*if (!missingItems.EquippedItems.Any())
+            /*if (!missingItems.EquippedItems.Any())s
             {
                 return;
             }*/
@@ -82,8 +82,10 @@ namespace DestinyPCLoadoutManager.API
 
             var allInventoryItems = characterTuple.Item1.Inventory.InventoryItems.Union(equippedItems.EquippedItems);
 
+            var currentItems = includeInventory ? loadout.EquippedItems.Union(loadout.InventoryItems) : loadout.EquippedItems;
+
             // Transfer items (preferrably we diff instead)
-            var itemsMissingFromInventory = loadout.EquippedItems.Difference(allInventoryItems, item => item.Id);
+            var itemsMissingFromInventory = currentItems.Difference(allInventoryItems, item => item.Id);
             foreach(var missingItem in itemsMissingFromInventory)
             {
                 await Util.RequestAndRetry(() => destinyApi.TransferItem(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, missingItem.Id, false));
@@ -95,6 +97,23 @@ namespace DestinyPCLoadoutManager.API
             var sortedItems = loadout.EquippedItems.OrderBy(item => item.Tier);
 
             await Util.RequestAndRetry(() => destinyApi.EquipItems(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, sortedItems.Select(item => item.Id).ToArray()));
+        }
+
+        public async Task<Loadout> ClearInventory()
+        {
+            var equippedItems = await GetEquiped();
+            var characterTuple = await accountManager.GetCurrentCharacter();
+            var inventoryItems = characterTuple.Item1.Inventory.InventoryItems;
+
+            equippedItems.InventoryItems = inventoryItems.ToList();
+
+            foreach (var item in inventoryItems)
+            {
+                await Util.RequestAndRetry(() => destinyApi.TransferItem(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, item.Id, true));
+                await Task.Delay(100);
+            }
+
+            return equippedItems;
         }
     }
 }

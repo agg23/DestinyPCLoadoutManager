@@ -1,7 +1,9 @@
 ﻿using Destiny2;
+using Destiny2.Definitions;
 using Destiny2.Entities.Items;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,8 +17,14 @@ namespace DestinyPCLoadoutManager.API.Models
             var manifest = App.provider.GetService(typeof(IManifest)) as IManifest;
 
             var item = await manifest.LoadInventoryItem(itemComponent.ItemHash);
+            var categories = await manifest.LoadItemCategories(item.ItemCategoryHashes);
 
-            return new Item(itemComponent.ItemInstanceId, itemComponent.ItemHash, item.DisplayProperties.Name, item.Equippable, item.Inventory.TierType);
+            return new Item(itemComponent.ItemInstanceId, itemComponent.ItemHash, item.DisplayProperties.Name, item.Equippable, item.Inventory.TierType, BuildType(categories));
+        }
+
+        public static DestinyItemType BuildType(IEnumerable<DestinyItemCategoryDefinition> categories)
+        {
+            return categories.Select(c => c.GrantDestinyItemType).Where(c => c == DestinyItemType.Armor || c == DestinyItemType.Weapon).FirstOrDefault();
         }
 
         public long Id;
@@ -24,14 +32,16 @@ namespace DestinyPCLoadoutManager.API.Models
         public string Name;
         public bool Equippable;
         public TierType Tier;
+        public DestinyItemType Type;
 
-        public Item(long id, long hash, string name, bool equippable, TierType tier)
+        public Item(long id, long hash, string name, bool equippable, TierType tier, DestinyItemType type)
         {
             Id = id;
             Hash = hash;
             Name = name;
             Equippable = equippable;
             Tier = tier;
+            Type = type;
         }
     }
 }
