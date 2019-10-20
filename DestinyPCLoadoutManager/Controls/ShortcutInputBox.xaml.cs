@@ -1,16 +1,9 @@
-﻿using DestinyPCLoadoutManager.Logic.Models;
+﻿using DestinyPCLoadoutManager.API.Models;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DestinyPCLoadoutManager.Controls
 {
@@ -23,8 +16,8 @@ namespace DestinyPCLoadoutManager.Controls
 
         private Key key;
         private ModifierKeys modifiers;
-        private Action<Key, ModifierKeys> editAction;
-        private Action<Key, ModifierKeys> saveAction;
+        private Action<Shortcut> editAction;
+        private Action<Shortcut> saveAction;
         
         public ShortcutInputBox()
         {
@@ -36,16 +29,16 @@ namespace DestinyPCLoadoutManager.Controls
             isEditMode = false;
         }
 
-        public void SetShortcut(Action<Key, ModifierKeys> editAction, Action<Key, ModifierKeys> saveAction)
+        public void SetShortcut(Action<Shortcut> editAction, Action<Shortcut> saveAction)
         {
             this.editAction = editAction;
             this.saveAction = saveAction;
         }
 
-        public void SetShortcut(Key key, ModifierKeys modifiers, Action<Key, ModifierKeys> editAction, Action<Key, ModifierKeys> saveAction)
+        public void SetShortcut(Shortcut shortcut, Action<Shortcut> editAction, Action<Shortcut> saveAction)
         {
-            this.key = key;
-            this.modifiers = modifiers;
+            this.key = shortcut.Key;
+            this.modifiers = shortcut.Modifiers;
             SetShortcut(editAction, saveAction);
 
             textBox.Text = textFromShortcut(key, modifiers);
@@ -56,12 +49,12 @@ namespace DestinyPCLoadoutManager.Controls
             if (isEditMode)
             {
                 // Save
-                saveAction(key, modifiers);
+                saveAction(new Shortcut(key, modifiers));
             }
             else
             {
                 // Edit
-                editAction(key, modifiers);
+                editAction(new Shortcut(key, modifiers));
             }
 
             isEditMode = !isEditMode;

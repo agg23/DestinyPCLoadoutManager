@@ -11,7 +11,7 @@
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <TextBox Name="textBox"/>
+        <TextBox Name="textBox" TextAlignment="Center" />
         <Button Name="editButton" Grid.Column="1" Click="ClickEdit">Edit</Button>
     </Grid>
 </UserControl>

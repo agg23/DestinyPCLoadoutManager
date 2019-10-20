@@ -1,5 +1,6 @@
 ﻿using DestinyPCLoadoutManager.API;
 using DestinyPCLoadoutManager.Auth;
+using DestinyPCLoadoutManager.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,22 @@ namespace DestinyPCLoadoutManager
         public MainWindow()
         {
             InitializeComponent();
+
+            var loadouts = Properties.Settings.Default.Loadouts;
+
+            if (loadouts == null)
+            {
+                return;
+            }
+
+            var saverList = new List<LoadoutSaver> { loadout0, loadout1, loadout2, loadout3, loadout4 };
+
+            var index = 0;
+            foreach (var pair in loadouts.Zip(saverList))
+            {
+                pair.Second.SetLoadout(pair.First, index);
+                index += 1;
+            }
         }
 
         public async void FetchUserClick(object sender, RoutedEventArgs e)

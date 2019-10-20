@@ -42,11 +42,9 @@ namespace DestinyPCLoadoutManager.API
             return new Loadout { EquippedItems = character.Inventory.EquippedItems };
         }
 
-        public async Task SaveLoadout(int index = -1)
+        public Loadout SaveLoadout(Loadout loadout, int index)
         {
-            var loadout = await GetEquiped();
             var savedLoadouts = Properties.Settings.Default.Loadouts;
-
             var newLoadouts = savedLoadouts != null ? new List<Loadout>(savedLoadouts) : new List<Loadout>();
             if (index == -1 || index == newLoadouts.Count)
             {
@@ -56,34 +54,20 @@ namespace DestinyPCLoadoutManager.API
             {
                 if (index > newLoadouts.Count)
                 {
-                    return;
+                    return loadout;
                 }
-                
+
                 newLoadouts[index] = loadout;
             }
 
             Properties.Settings.Default.Loadouts = newLoadouts;
             Properties.Settings.Default.Save();
+
+            return loadout;
         }
 
-        public async Task EquipLoadout(int index)
+        public async Task EquipLoadout(Loadout loadout)
         {
-            var savedLoadouts = Properties.Settings.Default.Loadouts;
-
-            if (savedLoadouts == null || savedLoadouts.Count <= index)
-            {
-                System.Diagnostics.Debug.WriteLine("Index for loadout does not exist");
-                return;
-            }
-
-            var savedLoadout = savedLoadouts[index];
-
-            if (savedLoadout == null)
-            {
-                System.Diagnostics.Debug.WriteLine("Could not retrieve loadout");
-                return;
-            }
-
             // TODO: Loadout diffing appears to be insufficient, as Bungie will often
             // return a cached state of your loadout. Some cache busting method is required
             //var equippedItems = await GetEquiped();
@@ -96,7 +80,7 @@ namespace DestinyPCLoadoutManager.API
             var characterTuple = await accountManager.GetCurrentCharacter();
             // Sort items to apply exotics last; ensuring any other exotic is removed before
             // attempting to insert a new exotic
-            var sortedItems = savedLoadout.EquippedItems.OrderBy(item => item.Tier);
+            var sortedItems = loadout.EquippedItems.OrderBy(item => item.Tier);
 
             await Util.RequestAndRetry(() => destinyApi.EquipItems(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, sortedItems.Select(item => item.Id).ToArray()));
         }

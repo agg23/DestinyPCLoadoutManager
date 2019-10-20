@@ -1,4 +1,5 @@
-﻿using NHotkey.Wpf;
+﻿using DestinyPCLoadoutManager.API.Models;
+using NHotkey.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +11,9 @@ namespace DestinyPCLoadoutManager.Logic
     {
         private HashSet<string> registeredKeys = new HashSet<string>();
         
-        public bool RegisterShortcut(string name, Key key, ModifierKeys modifiers, Action action)
+        public bool RegisterShortcut(string name, Shortcut shortcut, Action action)
         {
-            var hash = hashForKeyCombo(key, modifiers);
+            var hash = hashForShortcut(shortcut);
 
             if (registeredKeys.Contains(hash))
             {
@@ -21,22 +22,22 @@ namespace DestinyPCLoadoutManager.Logic
 
             registeredKeys.Add(hash);
             
-            HotkeyManager.Current.AddOrReplace(name, key, modifiers, new EventHandler<NHotkey.HotkeyEventArgs>((sender, e) => action()));
+            HotkeyManager.Current.AddOrReplace(name, shortcut.Key, shortcut.Modifiers, new EventHandler<NHotkey.HotkeyEventArgs>((sender, e) => action()));
 
             return true;
         }
 
-        public void UnregisterShortcut(string name, Key key, ModifierKeys modifiers)
+        public void UnregisterShortcut(string name, Shortcut shortcut)
         {
             HotkeyManager.Current.Remove(name);
 
-            var hash = hashForKeyCombo(key, modifiers);
+            var hash = hashForShortcut(shortcut);
             registeredKeys.Remove(hash);
         }
 
-        private string hashForKeyCombo(Key key, ModifierKeys modifiers)
+        private string hashForShortcut(Shortcut shortcut)
         {
-            return $"{key},{modifiers}";
+            return $"{shortcut.Key},{shortcut.Modifiers}";
         }
     }
 }

@@ -1,16 +1,9 @@
 ﻿using DestinyPCLoadoutManager.API;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using DestinyPCLoadoutManager.API.Models;
+using DestinyPCLoadoutManager.Logic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DestinyPCLoadoutManager.Controls
 {
@@ -21,38 +14,112 @@ namespace DestinyPCLoadoutManager.Controls
     {
         InventoryManager inventoryManager = App.provider.GetService(typeof(InventoryManager)) as InventoryManager;
 
+        private Loadout _loadout = new Loadout();
+        private Loadout loadout {
+            get {
+                return _loadout;
+            }
+            set {
+                _loadout = value;
+
+                nameTextBox.Text = value?.Name;
+                restoreButton.IsEnabled = value != null;
+            }
+        }
+        private int index;
+
+        private DebounceDispatcher debounceTimer = new DebounceDispatcher();
+
         public LoadoutSaver()
         {
             InitializeComponent();
 
+            nameTextBox.TextChanged += NameTextBoxChanged;
+
             shortcut.SetShortcut(RemoveShortcut, SaveShortcut);
         }
 
-        public void SaveLoadout(object sender, RoutedEventArgs e)
+        public void SetLoadout(Loadout loadout, int index)
         {
-            _ = inventoryManager.SaveLoadout(0);
+            this.loadout = loadout;
+            this.index = index;
+
+            if (loadout.Shortcut != null)
+            {
+                shortcut.SetShortcut(loadout.Shortcut, RemoveShortcut, SaveShortcut);
+                RegisterShortcut(loadout.Shortcut);
+            }
+        }
+
+        public async void SaveLoadout(object sender, RoutedEventArgs e)
+        {
+            var temp = loadout;
+            loadout = await inventoryManager.GetEquiped();
+
+            loadout.Name = temp.Name;
+            loadout.Shortcut = temp.Shortcut;
+
+            SaveLoadoutChanges();
         }
 
         public void RestoreLoadout(object sender, RoutedEventArgs e)
         {
-            _ = inventoryManager.EquipLoadout(0);
+            PerformRestore();
         }
 
-        private void SaveShortcut(Key key, ModifierKeys modifiers)
-        {  
-            Logic.InputManager inputManager = App.provider.GetService(typeof(Logic.InputManager)) as Logic.InputManager;
-            inputManager.RegisterShortcut("0", key, modifiers, ShortcutAction);
+        private void PerformRestore()
+        {
+            if (loadout == null)
+            {
+                return;
+            }
+            
+            _ = inventoryManager.EquipLoadout(loadout);
         }
 
-        private void RemoveShortcut(Key key, ModifierKeys modifiers)
+        private void NameTextBoxChanged(object sender, TextChangedEventArgs e)
+        {
+            debounceTimer.Debounce(500, _ =>
+            {
+                if (loadout.Name == nameTextBox.Text)
+                {
+                    return;
+                }
+
+                loadout.Name = nameTextBox.Text;
+
+                SaveLoadoutChanges();
+            });
+        }
+
+        private void SaveShortcut(Shortcut shortcut)
+        {
+            loadout.Shortcut = shortcut;
+
+            RegisterShortcut(shortcut);
+
+            SaveLoadoutChanges();
+        }
+
+        private void RegisterShortcut(Shortcut shortcut)
         {
             Logic.InputManager inputManager = App.provider.GetService(typeof(Logic.InputManager)) as Logic.InputManager;
-            inputManager.UnregisterShortcut("0", key, modifiers);
+            inputManager.RegisterShortcut($"{index}", shortcut, PerformRestore);
         }
 
-        private void ShortcutAction()
+        private void RemoveShortcut(Shortcut shortcut)
         {
-            _ = inventoryManager.EquipLoadout(0);
+            loadout.Shortcut = null;
+
+            Logic.InputManager inputManager = App.provider.GetService(typeof(Logic.InputManager)) as Logic.InputManager;
+            inputManager.UnregisterShortcut($"{index}", shortcut);
+
+            SaveLoadoutChanges();
+        }
+
+        private void SaveLoadoutChanges()
+        {
+            inventoryManager.SaveLoadout(loadout, index);
         }
     }
 }

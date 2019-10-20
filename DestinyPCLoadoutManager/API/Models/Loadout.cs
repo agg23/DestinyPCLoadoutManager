@@ -6,9 +6,16 @@ using System.Text;
 namespace DestinyPCLoadoutManager.API.Models
 {
     [Serializable]
-    class Loadout
+    public class Loadout
     {
+        public string Name { get; set; }
+        public Shortcut Shortcut { get; set; }
         public IEnumerable<Item> EquippedItems { get; set; }
+
+        public Loadout()
+        {
+            EquippedItems = new List<Item>();
+        }
 
         public Loadout Difference(Loadout additional)
         {
