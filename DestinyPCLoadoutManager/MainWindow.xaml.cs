@@ -78,6 +78,11 @@ namespace DestinyPCLoadoutManager
         private void AuthChanged(object sender, bool e)
         {
             authLabel.Content = e ? "Authorized" : "Not Authorized";
+
+            if (e)
+            {
+                FetchUserClick(null, null);
+            }
         }
     }
 }

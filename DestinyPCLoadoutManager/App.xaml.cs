@@ -103,8 +103,6 @@ namespace DestinyPCLoadoutManager
             await OnUiThreadAsync(async () =>
             {
                 await oauthManager.StartAuth();
-                var mainWindow = (MainWindow)Current.MainWindow;
-                mainWindow.FetchUserClick(null, null);
             });
         }
 

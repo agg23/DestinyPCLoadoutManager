@@ -12,7 +12,7 @@ namespace DestinyPCLoadoutManager.Controls
     /// </summary>
     public partial class ShortcutInputBox : UserControl
     {
-        private static string NO_SHORTCUT = "Unset shortcut";
+        private static string NO_SHORTCUT = "No set shortcut";
 
         private bool isEditMode = false;
 
