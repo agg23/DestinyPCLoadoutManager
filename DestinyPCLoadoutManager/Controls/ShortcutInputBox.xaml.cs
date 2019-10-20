@@ -12,6 +12,8 @@ namespace DestinyPCLoadoutManager.Controls
     /// </summary>
     public partial class ShortcutInputBox : UserControl
     {
+        private static string NO_SHORTCUT = "Unset shortcut";
+
         private bool isEditMode = false;
 
         private Key key;
@@ -25,6 +27,7 @@ namespace DestinyPCLoadoutManager.Controls
 
             textBox.PreviewKeyDown += TextBox_PreviewKeyDown;
             textBox.IsEnabled = false;
+            textBox.Text = NO_SHORTCUT;
 
             isEditMode = false;
         }
@@ -49,7 +52,10 @@ namespace DestinyPCLoadoutManager.Controls
             if (isEditMode)
             {
                 // Save
-                saveAction(new Shortcut(key, modifiers));
+                if (key != Key.None)
+                {
+                    saveAction(new Shortcut(key, modifiers));
+                }
             }
             else
             {
@@ -85,6 +91,13 @@ namespace DestinyPCLoadoutManager.Controls
                 return;
             }
 
+            if (key == Key.Escape && Keyboard.Modifiers == ModifierKeys.None)
+            {
+                // Clear input
+                key = Key.None;
+                modifiers = ModifierKeys.None;
+            }
+
             this.key = key;
             this.modifiers = Keyboard.Modifiers;
 
@@ -93,6 +106,11 @@ namespace DestinyPCLoadoutManager.Controls
 
         private string textFromShortcut(Key key, ModifierKeys modifiers)
         {
+            if (key == Key.None && modifiers == ModifierKeys.None)
+            {
+                return NO_SHORTCUT;
+            }
+            
             // Build the shortcut key name.
             StringBuilder shortcutText = new StringBuilder();
             if ((modifiers & ModifierKeys.Control) != 0)

@@ -13,7 +13,14 @@
             <RowDefinition Height="26" />
             <RowDefinition Height="26" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="nameTextBox" Margin="0,2,0,2"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <Label Padding="0,5,0,5">Name:</Label>
+            <TextBox x:Name="nameTextBox" Margin="0,2,0,2" Grid.Column="1"/>
+        </Grid>
         <Button Name="saveButton" Click="SaveLoadout" Margin="0,2,0,2" Grid.Row="1">Save Loadout</Button>
         <Button Name="restoreButton" Click="RestoreLoadout" Margin="0,2,0,2" Grid.Row="2">Restore Loadout</Button>
         <controls:ShortcutInputBox x:Name="shortcut" Margin="0,2,0,2" Grid.Row="3"/>
