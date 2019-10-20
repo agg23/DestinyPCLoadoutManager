@@ -1,6 +1,7 @@
 ﻿using Destiny2;
 using DestinyPCLoadoutManager.API.Models;
 using DestinyPCLoadoutManager.Auth;
+using DestinyPCLoadoutManager.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace DestinyPCLoadoutManager.API
         {
             // TODO: Loadout diffing appears to be insufficient, as Bungie will often
             // return a cached state of your loadout. Some cache busting method is required
-            //var equippedItems = await GetEquiped();
+            var equippedItems = await GetEquiped();
             //var missingItems = savedLoadout.Difference(equippedItems);
             /*if (!missingItems.EquippedItems.Any())
             {
@@ -78,6 +79,17 @@ namespace DestinyPCLoadoutManager.API
             }*/
 
             var characterTuple = await accountManager.GetCurrentCharacter();
+
+            var allInventoryItems = characterTuple.Item1.Inventory.InventoryItems.Union(equippedItems.EquippedItems);
+
+            // Transfer items (preferrably we diff instead)
+            var itemsMissingFromInventory = loadout.EquippedItems.Difference(allInventoryItems, item => item.Id);
+            foreach(var missingItem in itemsMissingFromInventory)
+            {
+                await Util.RequestAndRetry(() => destinyApi.TransferItem(oauthManager.currentToken.AccessToken, BungieMembershipType.TigerSteam, characterTuple.Item1.Id, missingItem.Id, false));
+                await Task.Delay(100);
+            }
+
             // Sort items to apply exotics last; ensuring any other exotic is removed before
             // attempting to insert a new exotic
             var sortedItems = loadout.EquippedItems.OrderBy(item => item.Tier);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DestinyPCLoadoutManager.Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,15 +22,8 @@ namespace DestinyPCLoadoutManager.API.Models
         {
             return new Loadout
             {
-                EquippedItems = Difference(this.EquippedItems, additional.EquippedItems)
+                EquippedItems = this.EquippedItems.Difference(additional.EquippedItems, item => item.Id)
             };
-        }
-
-        private IEnumerable<Item> Difference(IEnumerable<Item> a, IEnumerable<Item> b)
-        {
-            var subtractIdSet = b.Select(item => item.Id).ToHashSet();
-
-            return a.Where(item => !subtractIdSet.Contains(item.Id));
         }
     }
 }

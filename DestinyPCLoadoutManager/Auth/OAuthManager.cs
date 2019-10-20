@@ -46,12 +46,34 @@ namespace DestinyPCLoadoutManager.Auth
                 currentToken = savedToken;
 
                 var accountManager = App.provider.GetService(typeof(AccountManager)) as AccountManager;
-                if (await accountManager.GetAccount(true) != null)
+
+                var result = false;
+
+                try
+                {
+                    result = await accountManager.GetAccount(true) != null;
+                }
+                catch (UnauthorizedAccessException _)
+                {
+                    // Do nothing
+                }
+
+                if (result)
                 {
                     // Token success
                     return;
                 }
-                else if (await RefreshToken() != null && await accountManager.GetAccount(true) != null)
+
+                try
+                {
+                    result = await RefreshToken() != null && await accountManager.GetAccount(true) != null;
+                }
+                catch (UnauthorizedAccessException _)
+                {
+                    // Do nothing
+                }
+
+                if (result)
                 {
                     // Refresh succeeded and token success
                     return;
