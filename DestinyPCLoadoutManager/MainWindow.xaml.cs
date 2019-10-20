@@ -27,6 +27,9 @@ namespace DestinyPCLoadoutManager
         {
             InitializeComponent();
 
+            var oauthManager = App.provider.GetService(typeof(OAuthManager)) as OAuthManager;
+            oauthManager.AuthEvent += AuthChanged;
+
             var loadouts = Properties.Settings.Default.Loadouts;
 
             if (loadouts == null)
@@ -42,6 +45,13 @@ namespace DestinyPCLoadoutManager
                 pair.Second.SetLoadout(pair.First, index);
                 index += 1;
             }
+        }
+
+        public void AuthenticateClick(object sender, RoutedEventArgs e)
+        {
+            var oauthManager = App.provider.GetService(typeof(OAuthManager)) as OAuthManager;
+            var url = oauthManager.GenerateAuthorizationUrl();
+            oauthManager.VisitUrl(url);
         }
 
         public async void FetchUserClick(object sender, RoutedEventArgs e)
@@ -63,6 +73,11 @@ namespace DestinyPCLoadoutManager
             }
 
             characterList.SetCharacters(characters);
+        }
+
+        private void AuthChanged(object sender, bool e)
+        {
+            authLabel.Content = e ? "Authorized" : "Not Authorized";
         }
     }
 }

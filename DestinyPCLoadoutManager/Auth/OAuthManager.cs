@@ -29,6 +29,8 @@ namespace DestinyPCLoadoutManager.Auth
             }
         }
 
+        public event EventHandler<bool> AuthEvent;
+
         public OAuthManager(string clientId, string clientSecret, string port)
         {
             this.clientId = clientId;
@@ -61,7 +63,12 @@ namespace DestinyPCLoadoutManager.Auth
                 if (result)
                 {
                     // Token success
+                    AuthEvent.Invoke(this, true);
                     return;
+                }
+                else
+                {
+                    AuthEvent.Invoke(this, false);
                 }
 
                 try
@@ -76,6 +83,7 @@ namespace DestinyPCLoadoutManager.Auth
                 if (result)
                 {
                     // Refresh succeeded and token success
+                    AuthEvent.Invoke(this, true);
                     return;
                 }
 
@@ -181,6 +189,8 @@ namespace DestinyPCLoadoutManager.Auth
                     var token = JsonConvert.DeserializeObject<TokenResponse>(responseText);
                     currentToken = token;
 
+                    AuthEvent.Invoke(this, true);
+
                     SaveToken();
 
                     return token;
@@ -204,6 +214,8 @@ namespace DestinyPCLoadoutManager.Auth
 
                 }
             }
+
+            AuthEvent.Invoke(this, false);
 
             return null;
         }

@@ -99,10 +99,10 @@ namespace DestinyPCLoadoutManager
             inventoryManager.SetupServices();
 
             _ = manifestManager.DownloadManifest();
-            await oauthManager.StartAuth();
 
-            await OnUiThreadAsync(() =>
+            await OnUiThreadAsync(async () =>
             {
+                await oauthManager.StartAuth();
                 var mainWindow = (MainWindow)Current.MainWindow;
                 mainWindow.FetchUserClick(null, null);
             });
