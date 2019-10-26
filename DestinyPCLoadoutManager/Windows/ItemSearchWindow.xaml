@@ -1,0 +1,20 @@
+﻿<Window x:Class="DestinyPCLoadoutManager.Windows.ItemSearchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:DestinyPCLoadoutManager.Controls"
+        mc:Ignorable="d"
+        Title="ItemSearchWindow" Height="450" Width="800"
+        WindowStyle="None"
+        Activated="Window_Activated"
+        Deactivated="Window_Deactivated">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <TextBox x:Name="searchBox" />
+        <controls:ItemList x:Name="itemList" Grid.Row="1" />
+    </Grid>
+</Window>

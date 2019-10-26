@@ -1,6 +1,7 @@
 ﻿using DestinyPCLoadoutManager.API;
 using DestinyPCLoadoutManager.Auth;
 using DestinyPCLoadoutManager.Controls;
+using DestinyPCLoadoutManager.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +52,10 @@ namespace DestinyPCLoadoutManager
             {
                 loadoutFarming.SetLoadout(farmingLoadout, Properties.Settings.Default.IsFarmingMode);
             }
+
+            // TODO: Move
+            Logic.InputManager inputManager = App.provider.GetService(typeof(Logic.InputManager)) as Logic.InputManager;
+            inputManager.RegisterShortcut($"fullscreenTest", new API.Models.Shortcut(Key.P, ModifierKeys.Control | ModifierKeys.Shift), OpenWindow);
         }
 
         public void AuthenticateClick(object sender, RoutedEventArgs e)
@@ -89,6 +94,12 @@ namespace DestinyPCLoadoutManager
             {
                 FetchUserClick(null, null);
             }
+        }
+
+        private void OpenWindow()
+        {
+            var window = new ItemSearchWindow();
+            window.Show();
         }
     }
 }

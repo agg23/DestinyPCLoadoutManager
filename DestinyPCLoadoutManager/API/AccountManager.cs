@@ -101,9 +101,9 @@ namespace DestinyPCLoadoutManager.API
             return await Character.BuildCharacter(id, response);
         }
 
-        public async Task<Dictionary<long, Character>> GetCharacters()
+        public async Task<Dictionary<long, Character>> GetCharacters(bool preventFetch = false)
         {
-            if (currentCharacters != null)
+            if (currentCharacters != null || preventFetch)
             {
                 return currentCharacters;
             }
@@ -117,14 +117,6 @@ namespace DestinyPCLoadoutManager.API
                 // No characters
                 return null;
             }
-
-            DestinyComponentType[] types = new DestinyComponentType[]
-            {
-                DestinyComponentType.Profiles,
-                DestinyComponentType.Characters,
-                DestinyComponentType.CharacterInventories,
-                DestinyComponentType.CharacterEquipment,
-            };
 
             var characters = await Task.WhenAll(characterIds.Select(GetCharacter));
             currentCharacters = characters.ToDictionary(c => c.Id, c => c);

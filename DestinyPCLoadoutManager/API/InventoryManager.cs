@@ -43,6 +43,12 @@ namespace DestinyPCLoadoutManager.API
             return new Loadout { EquippedItems = character.Inventory.EquippedItems.ToList() };
         }
 
+        public async Task<IEnumerable<Inventory>> GetAllInventories(bool preventFetch = false)
+        {
+            var characters = await accountManager.GetCharacters(preventFetch);
+            return characters.Values.Select(c => c.Inventory);
+        }
+
         public void SaveLoadout(Loadout loadout, int index)
         {
             var savedLoadouts = Properties.Settings.Default.Loadouts;
