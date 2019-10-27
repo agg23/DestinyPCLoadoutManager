@@ -17,8 +17,6 @@
     <PackageReference Include="Destiny2" Version="1.5.0" />
     <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="Gear.NamedPipesSingleInstance" Version="1.0.2" />
-    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00006" />
-    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00006" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NHotkey.Wpf" Version="1.2.1" />
   </ItemGroup>
