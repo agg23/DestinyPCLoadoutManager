@@ -36,7 +36,7 @@ namespace DestinyPCLoadoutManager.Controls
 
             listItems = this.items.Select(item => new CharacterListItem
             {
-                Title = string.Format("{0}, Light {1}", item.Name, item.Type),
+                Title = string.Format("{0}, {1}: {2}", item.Name, item.Type, item.SubType),
                 Id = item.Id,
             });
 

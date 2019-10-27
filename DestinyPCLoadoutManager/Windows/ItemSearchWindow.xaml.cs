@@ -20,7 +20,7 @@ namespace DestinyPCLoadoutManager.Windows
     /// </summary>
     public partial class ItemSearchWindow : Window
     {
-        private InventoryManager inventoryManager;
+        private InventorySearcher inventorySearcher;
 
         private DebounceDispatcher debounceTimer = new DebounceDispatcher();
 
@@ -30,7 +30,7 @@ namespace DestinyPCLoadoutManager.Windows
 
             Topmost = true;
 
-            inventoryManager = App.provider.GetService(typeof(InventoryManager)) as InventoryManager;
+            inventorySearcher = App.provider.GetService(typeof(InventorySearcher)) as InventorySearcher;
 
             searchBox.TextChanged += SearchBoxChanged;
             searchBox.PreviewKeyDown += SearchBoxPreviewKeyDown;
@@ -38,18 +38,9 @@ namespace DestinyPCLoadoutManager.Windows
 
         private void SearchBoxChanged(object sender, TextChangedEventArgs e)
         {
-            debounceTimer.Debounce(100, async _ =>
+            debounceTimer.Debounce(100, _ =>
             {
-                var inventories = await inventoryManager.GetAllInventories(true);
-                
-                if (inventories == null)
-                {
-                    return;
-                }
-
-                var items = inventories.Select(i => i.EquippedItems.Union(i.InventoryItems)).Aggregate((a, b) => a.Union(b));
-
-                var sortedItems = items.Search(searchBox.Text, i => i.Name);
+                var sortedItems = inventorySearcher.Search(searchBox.Text);
 
                 itemList.SetItems(sortedItems);
             });

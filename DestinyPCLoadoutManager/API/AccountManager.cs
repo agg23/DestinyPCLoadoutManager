@@ -2,6 +2,7 @@
 using Destiny2.Responses;
 using DestinyPCLoadoutManager.API.Models;
 using DestinyPCLoadoutManager.Auth;
+using DestinyPCLoadoutManager.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,7 +99,12 @@ namespace DestinyPCLoadoutManager.API
         public async Task<Character> GetCharacter(long id)
         {
             var response = await GetCharacterInventoryResponse(id);
-            return await Character.BuildCharacter(id, response);
+            var character = await Character.BuildCharacter(id, response);
+
+            var inventorySearcher = App.provider.GetService(typeof(InventorySearcher)) as InventorySearcher;
+            inventorySearcher.Index(character.Inventory);
+
+            return character;
         }
 
         public async Task<Dictionary<long, Character>> GetCharacters(bool preventFetch = false)

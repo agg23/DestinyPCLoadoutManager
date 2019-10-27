@@ -91,6 +91,7 @@ namespace DestinyPCLoadoutManager
             var inventoryManager = new InventoryManager();
             services.AddSingleton(inventoryManager);
             services.AddSingleton(new InputManager());
+            services.AddSingleton(new InventorySearcher());
 
             provider = services.BuildServiceProvider();
 
